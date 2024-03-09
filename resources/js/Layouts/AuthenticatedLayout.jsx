@@ -4,6 +4,7 @@ import Dropdown from '@/Components/Dropdown'
 import NavLink from '@/Components/NavLink'
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink'
 import { Link } from '@inertiajs/react'
+import { Toaster } from 'react-hot-toast'
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -34,10 +35,34 @@ export default function Authenticated({ user, header, children }) {
                                     href={route('todo.index')}
                                     active={route().current('todo.index')}
                                 >
-                                    Todo
+                                    Todos
                                 </NavLink>
                             </div>
                         </div>
+
+                        <Toaster
+                            position="top-right"
+                            reverseOrder={false}
+                            gutter={8}
+                            containerClassName=""
+                            containerStyle={{}}
+                            toastOptions={{
+                                className: '',
+                                duration: 5000,
+                                style: {
+                                    background: '#363636',
+                                    color: '#fff',
+                                },
+
+                                success: {
+                                    duration: 3000,
+                                    theme: {
+                                        primary: 'green',
+                                        secondary: 'black',
+                                    },
+                                },
+                            }}
+                        />
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <div className="ms-3 relative">
