@@ -1,12 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head, router, useForm, usePage } from '@inertiajs/react'
+import { Head, router, Link, useForm, usePage } from '@inertiajs/react'
+import Pagination from '@/Components/Pagination.jsx'
 import Tombol from '@/Components/Tombol.jsx'
-import { Table, Alert } from 'flowbite-react'
-import { HiInformationCircle } from 'react-icons/hi'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
-export default function Todo({ auth }) {
-    const { errors } = usePage().props
+export default function Todo({ auth, todos }) {
+    const { flash, errors } = usePage().props
 
     const { data, setData, reset } = useForm({
         task: '',
@@ -93,34 +92,53 @@ export default function Todo({ auth }) {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto">
-                <Table hoverable>
-                    <Table.Head>
-                        <Table.HeadCell>Tasks</Table.HeadCell>
-                        <Table.HeadCell>Status</Table.HeadCell>
-                        <Table.HeadCell>Date</Table.HeadCell>
-                        <Table.HeadCell>
-                            <span className="sr-only">Edit</span>
-                        </Table.HeadCell>
-                    </Table.Head>
-                    <Table.Body className="divide-y">
-                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                {'Apple MacBook Pro 17"'}
-                            </Table.Cell>
-                            <Table.Cell>Laptop</Table.Cell>
-                            <Table.Cell>$2999</Table.Cell>
-                            <Table.Cell>
-                                <a
-                                    href="#"
-                                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+            <div className="max-w-6xl mx-auto">
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" className="px-6 py-3">
+                                    Task Name
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Status of Task
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Date
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    <span className="sr-only">Edit</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {todos.data.map(todo => (
+                                <tr
+                                    key={todo.id}
+                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
-                                    Edit
-                                </a>
-                            </Table.Cell>
-                        </Table.Row>
-                    </Table.Body>
-                </Table>
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    >
+                                        {todo.task}
+                                    </th>
+                                    <td className="px-6 py-4">{todo.status}</td>
+                                    <td className="px-6 py-4"> {todo.date}</td>
+                                    <td className="px-6 py-4 text-right">
+                                        <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                            Edit
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="flex overflow-x-auto sm:justify-center mt-5">
+                    <Pagination todos={todos} />
+                </div>
             </div>
         </AuthenticatedLayout>
     )

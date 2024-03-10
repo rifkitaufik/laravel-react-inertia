@@ -11,7 +11,7 @@ class TodoController extends Controller
     public function index()
     {
         $data = [
-
+            'todos' => Todo::latest()->paginate(4),
         ];
         return inertia('Todo', $data);
     }
@@ -21,13 +21,15 @@ class TodoController extends Controller
         $data = $request->validate([
             'task' => 'required',
             'status' => 'required',
+            'date' => 'required',
         ], [
             'task.required' => 'task wajib diisi',
             'status.required' => 'status Wajib diisi',
+            'date.required' => 'date wajib diisi',
         ]);
 
         Todo::create($data);
 
-        return back()->with('success', 'Data berhasil ditambahkan');
+        return back()->with('success', 'Data Task berhasil ditambah');
     }
 }
