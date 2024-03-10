@@ -5,7 +5,7 @@ import Tombol from '@/Components/Tombol.jsx'
 import toast from 'react-hot-toast'
 
 export default function Todo({ auth, todos }) {
-    const { flash, errors } = usePage().props
+    const { errors } = usePage().props
 
     const { data, setData, reset } = useForm({
         task: '',
@@ -29,14 +29,7 @@ export default function Todo({ auth, todos }) {
     }
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Selamat datang, {auth.user.name}
-                </h2>
-            }
-        >
+        <AuthenticatedLayout user={auth.user} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Selamat datang, {auth.user.name}</h2>}>
             <Head title="Todos" />
 
             <div className="py-12">
@@ -46,43 +39,28 @@ export default function Todo({ auth, todos }) {
                             <div className="flex mt-3">
                                 <input
                                     type="text"
-                                    onChange={e =>
-                                        setData('task', e.target.value)
-                                    }
+                                    onChange={e => setData('task', e.target.value)}
                                     value={data.task}
                                     placeholder="nama task"
                                     className={
-                                        `form-input w-full rounded-lg mr-3 outline-2` +
-                                        (errors.task
-                                            ? 'border border-red-700'
-                                            : 'border border-gray-200')
+                                        `form-input w-full rounded-lg mr-3 outline-2` + (errors.task ? 'border border-red-700' : 'border border-gray-200')
                                     }
                                 />
                                 <input
                                     type="text"
-                                    onChange={e =>
-                                        setData('status', e.target.value)
-                                    }
+                                    onChange={e => setData('status', e.target.value)}
                                     value={data.status}
                                     placeholder="status task"
                                     className={
-                                        `form-input w-full rounded-lg mr-3 outline-2` +
-                                        (errors.status
-                                            ? 'border border-red-700'
-                                            : 'border border-gray-200')
+                                        `form-input w-full rounded-lg mr-3 outline-2` + (errors.status ? 'border border-red-700' : 'border border-gray-200')
                                     }
                                 />
                                 <input
                                     type="date"
-                                    onChange={e =>
-                                        setData('date', e.target.value)
-                                    }
+                                    onChange={e => setData('date', e.target.value)}
                                     value={data.date}
                                     className={
-                                        `form-input w-full rounded-lg mr-3 outline-2` +
-                                        (errors.date
-                                            ? 'border border-red-700'
-                                            : 'border border-gray-200')
+                                        `form-input w-full rounded-lg mr-3 outline-2` + (errors.date ? 'border border-red-700' : 'border border-gray-200')
                                     }
                                 />
                                 <Tombol>submit</Tombol>
@@ -113,22 +91,14 @@ export default function Todo({ auth, todos }) {
                         </thead>
                         <tbody>
                             {todos.data.map(todo => (
-                                <tr
-                                    key={todo.id}
-                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                >
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                    >
+                                <tr key={todo.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {todo.task}
                                     </th>
                                     <td className="px-6 py-4">{todo.status}</td>
                                     <td className="px-6 py-4"> {todo.date}</td>
                                     <td className="px-6 py-4 text-right">
-                                        <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                            Edit
-                                        </Link>
+                                        <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
                                     </td>
                                 </tr>
                             ))}
