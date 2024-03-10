@@ -25,6 +25,6 @@ class Todo extends Model
 
     public function getDateAttribute($value)
     {
-        return Carbon::parse($value)->format('d F Y');
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

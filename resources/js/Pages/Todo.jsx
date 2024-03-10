@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head, router, Link, useForm, usePage } from '@inertiajs/react'
+import { Head, router, useForm, usePage } from '@inertiajs/react'
 import Pagination from '@/Components/Pagination.jsx'
 import Tombol from '@/Components/Tombol.jsx'
 import toast from 'react-hot-toast'
@@ -8,24 +8,64 @@ export default function Todo({ auth, todos }) {
     const { errors } = usePage().props
 
     const { data, setData, reset } = useForm({
+        id: '',
         task: '',
         status: '',
         date: '',
     })
 
+    // const submitData = e => {
+    //     e.preventDefault()
+    //     router.post(route('todo.store'), data, {
+    //         preserveScroll: true,
+    //         onSuccess: () => {
+    //             reset()
+    //             toast.success('Data berhasil disimpan')
+    //         },
+    //         onError: errors => {
+    //             toast.error('Data gagal disimpan')
+    //         },
+    //     })
+    // }
+
     const submitData = e => {
         e.preventDefault()
 
-        router.post(route('todo.store'), data, {
+        const endpoint = data.id ? route('todo.update', data.id) : route('todo.store')
+
+        router[data.id ? 'put' : 'post'](endpoint, data, {
             preserveScroll: true,
             onSuccess: () => {
                 reset()
-                toast.success('Data berhasil disimpan')
+                toast.success(data.id ? 'Data berhasil diperbarui' : 'Data berhasil disimpan')
             },
             onError: errors => {
-                toast.error('Data gagal disimpan')
+                toast.error(data.id ? 'Gagal memperbarui data' : 'Gagal menyimpan data')
             },
         })
+    }
+
+    const handleEdit = todo => {
+        setData({
+            id: todo.id,
+            task: todo.task,
+            status: todo.status,
+            date: todo.date,
+        })
+    }
+
+    const handleDelete = async todoId => {
+        router.delete(
+            route('todo.destroy', todoId, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.success('Data berhasil dihapus')
+                },
+                onError: () => {
+                    toast.error('Data berhasil dihapus')
+                },
+            })
+        )
     }
 
     return (
@@ -98,7 +138,18 @@ export default function Todo({ auth, todos }) {
                                     <td className="px-6 py-4">{todo.status}</td>
                                     <td className="px-6 py-4"> {todo.date}</td>
                                     <td className="px-6 py-4 text-right">
-                                        <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
+                                        <button
+                                            onClick={() => handleEdit(todo)}
+                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline focus:outline-none"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(todo.id)}
+                                            className="font-medium text-red-600 dark:text-red-500 hover:underline focus:outline-none ml-2"
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
