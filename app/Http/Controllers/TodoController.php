@@ -56,5 +56,7 @@ class TodoController extends Controller
     {
         $todo->delete();
         return redirect()->route('todo.index')->with('success', 'Data berhasil dihapus');
+
+//        return response()->json(['message' => 'Data berhasil dihapus']);
     }
 }

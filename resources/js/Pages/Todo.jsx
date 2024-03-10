@@ -3,9 +3,11 @@ import { Head, router, useForm, usePage } from '@inertiajs/react'
 import Pagination from '@/Components/Pagination.jsx'
 import Tombol from '@/Components/Tombol.jsx'
 import toast from 'react-hot-toast'
+import { useRef } from 'react'
 
 export default function Todo({ auth, todos }) {
     const { errors } = usePage().props
+    const taskInput = useRef()
 
     const { data, setData, reset } = useForm({
         id: '',
@@ -13,20 +15,6 @@ export default function Todo({ auth, todos }) {
         status: '',
         date: '',
     })
-
-    // const submitData = e => {
-    //     e.preventDefault()
-    //     router.post(route('todo.store'), data, {
-    //         preserveScroll: true,
-    //         onSuccess: () => {
-    //             reset()
-    //             toast.success('Data berhasil disimpan')
-    //         },
-    //         onError: errors => {
-    //             toast.error('Data gagal disimpan')
-    //         },
-    //     })
-    // }
 
     const submitData = e => {
         e.preventDefault()
@@ -38,6 +26,7 @@ export default function Todo({ auth, todos }) {
             onSuccess: () => {
                 reset()
                 toast.success(data.id ? 'Data berhasil diperbarui' : 'Data berhasil disimpan')
+                taskInput.current.focus()
             },
             onError: errors => {
                 toast.error(data.id ? 'Gagal memperbarui data' : 'Gagal menyimpan data')
@@ -54,15 +43,15 @@ export default function Todo({ auth, todos }) {
         })
     }
 
-    const handleDelete = async todoId => {
+    const handleDelete = id => {
         router.delete(
-            route('todo.destroy', todoId, {
+            route('todo.destroy', id, {
                 preserveScroll: true,
                 onSuccess: () => {
                     toast.success('Data berhasil dihapus')
                 },
                 onError: () => {
-                    toast.error('Data berhasil dihapus')
+                    toast.error('Gagal menghapus data')
                 },
             })
         )
@@ -73,11 +62,12 @@ export default function Todo({ auth, todos }) {
             <Head title="Todos" />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <form onSubmit={submitData}>
                             <div className="flex mt-3">
                                 <input
+                                    ref={taskInput}
                                     type="text"
                                     onChange={e => setData('task', e.target.value)}
                                     value={data.task}
@@ -86,6 +76,7 @@ export default function Todo({ auth, todos }) {
                                         `form-input w-full rounded-lg mr-3 outline-2` + (errors.task ? 'border border-red-700' : 'border border-gray-200')
                                     }
                                 />
+
                                 <input
                                     type="text"
                                     onChange={e => setData('status', e.target.value)}
@@ -135,18 +126,18 @@ export default function Todo({ auth, todos }) {
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {todo.task}
                                     </th>
-                                    <td className="px-6 py-4">{todo.status}</td>
-                                    <td className="px-6 py-4"> {todo.date}</td>
+                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{todo.status}</td>
+                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {todo.date}</td>
                                     <td className="px-6 py-4 text-right">
                                         <button
                                             onClick={() => handleEdit(todo)}
-                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline focus:outline-none"
+                                            className="font-medium rounded-lg text-white bg-blue-700 hover:bg-blue-600 py-2 px-3 focus:outline-none mr-2"
                                         >
                                             Edit
                                         </button>
                                         <button
                                             onClick={() => handleDelete(todo.id)}
-                                            className="font-medium text-red-600 dark:text-red-500 hover:underline focus:outline-none ml-2"
+                                            className="font-medium rounded-lg text-white bg-red-800 hover:bg-red-700 py-2 px-3 focus:outline-none"
                                         >
                                             Delete
                                         </button>
